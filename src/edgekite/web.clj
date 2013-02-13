@@ -5,17 +5,6 @@
         [hiccup.core]
         [hiccup.page]))
 
-(def state (atom {}))
-
-(defn store [k v]
-  (swap!
-   state
-   (fn [m]
-     (let [x (m k {:first v :count 0})
-           c (x :count)
-           y (assoc x :last v :count (inc c))]
-       (assoc m k y)))))
-
 (defn map->table [m]
   [:table
      (map #(do [:tr [:td (first %)] [:td (str (second %))]]) (seq m))])
@@ -32,17 +21,14 @@
 
 (def url-map
   {:home   "/"
-   :guests "/guests"
-   :style  "style.css"})
+   :hello  "/hello"
+   :log    "/log"
+   :debug  "/debug"
+   :style  "/style.css"})
 
 (defn gu [id]
   "Generate URL"
   (url-map id))
-
-(def guest-form
-  [:form {:action (gu :home)}
-   [:input {:name "name"}]
-   [:input {:type "submit"}]])
 
 (defn page [title body]
   (html (include-css (gu :style))
@@ -59,27 +45,66 @@
       (comment [:script "setTimeout(\"location = location\", 1000)"])]])))
 
 (defn home [req]
-  (let [name ((:params req) "name" "")]
-    (store name (java.util.Date.))
-    {:status 200
-     :headers {"Content-Type" "text/html"}
-     :body (page "edgekite" [:div (str "Welcome " name " to edgekite.") guest-form (debug-req req)])}))
-
-(defn guests [req]
   {:status 200
    :headers {"Content-Type" "text/html"}
-   :body (page
-          "guests"
-          (map->table @state))})
+   :body (page "edgekite" [:div (str "Welcome to edgekite.")])})
+
+(def hello-form
+  [:form {:action (gu :hello)
+          :method :post}
+   [:label "Name:"]
+   [:input {:name "name"}]
+   [:input {:type "submit"}]])
+
+(defn hello [req]
+  (let [name (get-in req [:params "name"] "Unknown")]
+    {:status 200
+     :headers {"Content-Type" "text/html"}
+     :body (page "hello" [:div (str "Hello " name) hello-form])}))
+
+(defn debug [req]
+  {:status 200
+   :headers {"Content-Type" "text/html"}
+   :body (page "debug" (debug-req req))})
 
 (defn four-oh-four [req]
   {:status 404
    :headers {"Content-Type" "text/html"}
    :body (page "Four, Oh! Four." "Errrm...")})
 
+(defn wrap-segment-uri [handler]
+  (fn [request]
+    (let [segs (rest (split (:uri request) #"/"))
+          req (assoc request :segments segs)]
+      (handler req))))
+
+(def state (atom {}))
+
+(defn store [k v]
+  (swap!
+   state
+   (fn [m]
+     (let [x (m k {:first v :count 0})
+           c (x :count)
+           y (assoc x :last v :count (inc c))]
+       (assoc m k y)))))
+
+(defn log [req]
+  {:status 200
+   :headers {"Content-Type" "text/html"}
+   :body (page "log" [:div (map->table @state)])})
+
+(defn wrap-log [handler]
+  (fn [req]
+    (let [ip (:remote-addr req)]
+    (store ip (java.util.Date.)))
+    (handler req)))
+
 (def routes
   {(gu :home)   home
-   (gu :guests) guests
+   (gu :hello)  hello
+   (gu :log)    log
+   (gu :debug)  debug
    :default     four-oh-four})
 
 (defn router [req]
@@ -88,15 +113,9 @@
         r (routes u d)]
     (r req)))
 
-(defn wrap-segment-uri
-  [handler]
-  (fn [request]
-    (let [segs (rest (split (:uri request) #"/"))
-          req (assoc request :segments segs)]
-      (handler req))))
-
 (def handler
   (-> router
       (wrap-resource "public")
       wrap-params
-      wrap-segment-uri))
+      wrap-segment-uri
+      wrap-log))
