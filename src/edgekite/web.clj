@@ -8,10 +8,44 @@
 (def state (atom {}))
 
 (defn store [k v]
-  (swap! state #(assoc % k v)))
+  (swap!
+   state
+   (fn [m]
+     (let [x (m k {:first v :count 0})
+           c (x :count)
+           y (assoc x :last v :count (inc c))]
+       (assoc m k y)))))
+
+(defn map->table [m]
+  [:table
+     (map #(do [:tr [:td (first %)] [:td (str (second %))]]) (seq m))])
+
+(defn debug-req [req]
+  (let [headers (:headers req)
+        req (dissoc req :headers)]
+    [:div
+     [:h2 "Request Details"]
+     [:h3 "Properties"]
+     (map->table req)
+     [:h3 "Headers"]
+     (map->table headers)]))
+
+(def url-map
+  {:home   "/"
+   :guests "/guests"
+   :style  "style.css"})
+
+(defn gu [id]
+  "Generate URL"
+  (url-map id))
+
+(def guest-form
+  [:form {:action (gu :home)}
+   [:input {:name "name"}]
+   [:input {:type "submit"}]])
 
 (defn page [title body]
-  (html (include-css "/style.css")
+  (html (include-css (gu :style))
    (html5
     [:html
      [:head [:title "edgekite"]]
@@ -29,12 +63,14 @@
     (store name (java.util.Date.))
     {:status 200
      :headers {"Content-Type" "text/html"}
-     :body (page "edgekite" (str "Welcome " name " to edgekite."))}))
+     :body (page "edgekite" [:div (str "Welcome " name " to edgekite.") guest-form (debug-req req)])}))
 
 (defn guests [req]
   {:status 200
    :headers {"Content-Type" "text/html"}
-   :body (page "guests" (map #(do [:div (first %) " - " (second %)]) (seq @state)))})
+   :body (page
+          "guests"
+          (map->table @state))})
 
 (defn four-oh-four [req]
   {:status 404
@@ -42,8 +78,8 @@
    :body (page "Four, Oh! Four." "Errrm...")})
 
 (def routes
-  {"/"          home
-   "/guests"    guests
+  {(gu :home)   home
+   (gu :guests) guests
    :default     four-oh-four})
 
 (defn router [req]
