@@ -1,5 +1,6 @@
 (ns edgekite.web
   (:use [clojure.string :only [split]]
+        [ring.middleware.resource]
         [ring.middleware.params]
         [hiccup.core]
         [hiccup.page]))
@@ -12,11 +13,7 @@
 (defn css [req]
   {:status 200
    :headers {"Content-Type" "text/css"}
-   :body "body { font-family: monospace; margin: 0; padding: 0; color: #6f6950; }
-   h1 { padding: 0; margin: 0; }
-   #top-bar { padding: 5px 0; }
-   #wrapper { margin: 0 auto; width: 800px; }
-   #content { background: #d5d0cc; padding: 0 5px; min-height: 500px; }"})
+   :body ""})
 
 (defn page [title body]
   (html (include-css "/style.css")
@@ -50,12 +47,14 @@
    :body (page "Four, Oh! Four." "Errrm...")})
 
 (def routes
-  {"/" home
-   "/guests" guests
-   "/style.css" css})
+  {"/"          home
+   "/guests"    guests
+   :default     four-oh-four})
 
 (defn router [req]
-  (let [r (routes (:uri req) four-oh-four)]
+  (let [u (:uri req)
+        d (:default routes)
+        r (routes u d)]
     (r req)))
 
 (defn wrap-segment-uri
@@ -67,5 +66,6 @@
 
 (def handler
   (-> router
+      (wrap-resource "public")
       wrap-params
       wrap-segment-uri))

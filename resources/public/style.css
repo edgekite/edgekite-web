@@ -1,0 +1,5 @@
+body { font-family: monospace; margin: 0; padding: 0; color: #6f6950; }
+h1 { padding: 0; margin: 0; }
+#top-bar { padding: 5px 0; }
+#wrapper { margin: 0 auto; width: 800px; }
+#content { background: #d5d0cc; padding: 0 5px; min-height: 500px; }
