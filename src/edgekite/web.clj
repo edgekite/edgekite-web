@@ -10,11 +10,6 @@
 (defn store [k v]
   (swap! state #(assoc % k v)))
 
-(defn css [req]
-  {:status 200
-   :headers {"Content-Type" "text/css"}
-   :body ""})
-
 (defn page [title body]
   (html (include-css "/style.css")
    (html5
