@@ -1,23 +1,16 @@
 (ns edgekite.web
   (:use [clojure.string :only [split]]
         [ring.middleware.resource]
+        [ring.middleware.file-info]
         [ring.middleware.params]
+        [ring.util.response]
+        [ring.handler.dump]
         [hiccup.core]
         [hiccup.page]))
 
 (defn map->table [m]
   [:table
      (map #(do [:tr [:td (first %)] [:td (str (second %))]]) (seq m))])
-
-(defn debug-req [req]
-  (let [headers (:headers req)
-        req (dissoc req :headers)]
-    [:div
-     [:h2 "Request Details"]
-     [:h3 "Properties"]
-     (map->table req)
-     [:h3 "Headers"]
-     (map->table headers)]))
 
 (def url-map
   {:home   "/"
@@ -31,10 +24,12 @@
   (url-map id))
 
 (defn page [title body]
-  (html (include-css (gu :style))
+  (html
    (html5
     [:html
-     [:head [:title "edgekite"]]
+     [:head
+      [:title "edgekite"]
+      (include-css (gu :style))]
      [:body
       [:div#wrapper
        [:div#content
@@ -44,10 +39,12 @@
         (comment [:div (java.util.Date.)])]]
       (comment [:script "setTimeout(\"location = location\", 1000)"])]])))
 
+(defn ok-html [body]
+  (-> (response body)
+      (content-type "text/html")))
+
 (defn home [req]
-  {:status 200
-   :headers {"Content-Type" "text/html"}
-   :body (page "edgekite" [:div (str "Welcome to edgekite.")])})
+  (ok-html (page "edgekite" [:div (str "Welcome to edgekite.")])))
 
 (def hello-form
   [:form {:action (gu :hello)
@@ -57,20 +54,13 @@
    [:input {:type "submit"}]])
 
 (defn hello [req]
-  (let [name (get-in req [:params "name"] "Unknown")]
-    {:status 200
-     :headers {"Content-Type" "text/html"}
-     :body (page "hello" [:div (str "Hello " name) hello-form])}))
-
-(defn debug [req]
-  {:status 200
-   :headers {"Content-Type" "text/html"}
-   :body (page "debug" (debug-req req))})
+  (let [name (get-in req [:params "name"] "Unknown")
+        body (page "hello" [:div (str "Hello " name) hello-form])]
+    (ok-html body)))
 
 (defn four-oh-four [req]
-  {:status 404
-   :headers {"Content-Type" "text/html"}
-   :body (page "Four, Oh! Four." "Errrm...")})
+  (-> (not-found (page "Four, Oh! Four." "Errrm..."))
+      (content-type "text/html")))
 
 (defn wrap-segment-uri [handler]
   (fn [request]
@@ -90,9 +80,8 @@
        (assoc m k y)))))
 
 (defn log [req]
-  {:status 200
-   :headers {"Content-Type" "text/html"}
-   :body (page "log" [:div (map->table @state)])})
+  (let [body (page "log" [:div (map->table @state)])]
+    (ok-html body)))
 
 (defn wrap-log [handler]
   (fn [req]
@@ -104,7 +93,7 @@
   {(gu :home)   home
    (gu :hello)  hello
    (gu :log)    log
-   (gu :debug)  debug
+   (gu :debug)  handle-dump
    :default     four-oh-four})
 
 (defn router [req]
@@ -116,6 +105,7 @@
 (def handler
   (-> router
       (wrap-resource "public")
+      wrap-file-info
       wrap-params
       wrap-segment-uri
       wrap-log))
