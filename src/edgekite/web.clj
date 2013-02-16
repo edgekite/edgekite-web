@@ -1,5 +1,5 @@
 (ns edgekite.web
-  (:use [clojure.string :only [split]]
+  (:use [edgekite.routing]
         [ring.middleware.resource]
         [ring.middleware.file-info]
         [ring.middleware.params]
@@ -19,9 +19,7 @@
    :debug  "/debug"
    :style  "/style.css"})
 
-(defn gu [id]
-  "Generate URL"
-  (url-map id))
+(def gu (ggu url-map))
 
 (defn page [title body]
   (html
@@ -62,12 +60,6 @@
   (-> (not-found (page "Four, Oh! Four." "Errrm..."))
       (content-type "text/html")))
 
-(defn wrap-segment-uri [handler]
-  (fn [request]
-    (let [segs (rest (split (:uri request) #"/"))
-          req (assoc request :segments segs)]
-      (handler req))))
-
 (def state (atom {}))
 
 (defn store [k v]
@@ -96,14 +88,8 @@
    (gu :debug)  handle-dump
    :default     four-oh-four})
 
-(defn router [req]
-  (let [u (:uri req)
-        d (:default routes)
-        r (routes u d)]
-    (r req)))
-
 (def handler
-  (-> router
+  (-> (router routes)
       (wrap-resource "public")
       wrap-file-info
       wrap-params
