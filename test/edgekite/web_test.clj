@@ -1,6 +1,6 @@
-(ns edgekite.core-test
+(ns edgekite.web-test
   (:use clojure.test
-        edgekite.core))
+        edgekite.web))
 
 (deftest a-test
   (testing "FIXME, I fail."
