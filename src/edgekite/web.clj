@@ -78,7 +78,7 @@
 (defn wrap-log [handler]
   (fn [req]
     (let [ip (:remote-addr req)]
-    (store ip (java.util.Date.)))
+      (store ip (java.util.Date.)))
     (handler req)))
 
 (def routes
