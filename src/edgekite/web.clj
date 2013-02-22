@@ -8,10 +8,6 @@
         [hiccup.core]
         [hiccup.page]))
 
-(defn map->table [m]
-  [:table
-     (map #(do [:tr [:td (first %)] [:td (str (second %))]]) (seq m))])
-
 (def url-map
   {:home   "/"
    :hello  "/hello"
@@ -71,13 +67,19 @@
            y (assoc x :last v :count (inc c))]
        (assoc m k y)))))
 
+(defn map->table [m]
+  [:table
+     (map #(do [:tr [:td (first %)] [:td (str (second %))]]) (seq m))])
+
 (defn log [req]
   (let [body (page "log" [:div (map->table @state)])]
     (ok-html body)))
 
 (defn wrap-log [handler]
   (fn [req]
-    (let [ip (:remote-addr req)]
+    ;; if behind load balancer we want the forwarded IP
+    (let [fwd-ip (get-in req [:headers "x-forwarded-for"])
+          ip (or fwd-ip (:remote-addr req))]
       (store ip (java.util.Date.)))
     (handler req)))
 
