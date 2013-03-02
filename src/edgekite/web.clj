@@ -1,5 +1,6 @@
 (ns edgekite.web
   (:use [edgekite.routing]
+        [edgekite.store]
         [ring.middleware.resource]
         [ring.middleware.file-info]
         [ring.middleware.params]
@@ -55,17 +56,6 @@
 (defn four-oh-four [req]
   (-> (not-found (page "Four, Oh! Four." "Errrm..."))
       (content-type "text/html")))
-
-(def state (atom {}))
-
-(defn store [k v]
-  (swap!
-   state
-   (fn [m]
-     (let [x (m k {:first v :count 0})
-           c (x :count)
-           y (assoc x :last v :count (inc c))]
-       (assoc m k y)))))
 
 (defn map->table [m]
   [:table
