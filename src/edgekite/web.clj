@@ -29,7 +29,8 @@
       [:div#wrapper
        [:div#content
         [:div#top-bar
-         [:h1 title]]
+         [:h1  "edgekite"]]
+        (if title [:h2 title])
         body
         (comment [:div (java.util.Date.)])]]
       (comment [:script "setTimeout(\"location = location\", 1000)"])]])))
@@ -39,7 +40,7 @@
       (content-type "text/html")))
 
 (defn home [req]
-  (ok-html (page "edgekite" [:div (str "Welcome to edgekite.")])))
+  (ok-html (page nil [:div (str "Welcome to edgekite.")])))
 
 (def hello-form
   [:form {:action (gu :hello)
