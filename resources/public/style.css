@@ -1,5 +1,16 @@
+@font-face {
+    font-family: Raleway;
+    /* see http://www.html5rocks.com/en/tutorials/webfonts/quick/ */
+    src: url('fonts/raleway_thin-webfont.eot');                         /* IE 5-8 */
+    src: local('☺'),                                                    /* sneakily trick IE */
+         url('fonts/raleway_thin-webfont.woff')     format('woff'),     /* FF 3.6, Chrome 5, IE9 */
+         url('fonts/raleway_thin-webfont.ttf')      format('truetype'), /* Opera, Safari */
+         url('fonts/raleway_thin-webfont.svg#font') format('svg');      /* iOS */
+}
+
 body { font-family: monospace; margin: 0; padding: 0; color: #6f6950; }
-h1 { padding: 0; margin: 0; }
+h1 { font-family: Raleway; font-size: 32px; padding: 0; margin: 0; letter-spacing: 2px; }
+h2 { font-size: 24px; }
 #top-bar { padding: 5px 0; }
 #wrapper { margin: 0 auto; width: 800px; }
-#content { background: #d5d0cc; padding: 0 5px; min-height: 500px; }
+#content { background: #d5d0cc; padding: 12px 20px; min-height: 500px; }
