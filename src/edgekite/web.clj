@@ -1,6 +1,6 @@
 (ns edgekite.web
   (:use [edgekite.routing]
-        [edgekite.store]
+        [edgekite.logging]
         [ring.middleware.resource]
         [ring.middleware.file-info]
         [ring.middleware.params]
@@ -55,16 +55,8 @@
      (map #(do [:tr [:td (first %)] [:td (str (second %))]]) (seq m))])
 
 (defn log [req]
-  (let [body (page "log" [:div (map->table @state)])]
+  (let [body (page "log" [:div (map->table (get-log))])]
     (ok-html body)))
-
-(defn wrap-log [handler]
-  (fn [req]
-    ;; if behind load balancer we want the forwarded IP
-    (let [fwd-ip (get-in req [:headers "x-forwarded-for"])
-          ip (or fwd-ip (:remote-addr req))]
-      (store ip (java.util.Date.)))
-    (handler req)))
 
 (def handlers
   {[:home]  home
