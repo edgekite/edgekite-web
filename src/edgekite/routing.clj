@@ -1,19 +1,20 @@
 (ns edgekite.routing
-  (:use [clojure.string :only [split]]))
+  (:require [gudu]))
 
-(defn ggu [url-map]
-  (fn [id]
-    (url-map id)))
+(def routes
+  {:home   []
+   :hello  ["hello"]
+   :log    ["log"]
+   :debug  ["debug"]
+   :style  ["style.css"]})
 
-(defn wrap-segment-uri [handler]
-  (fn [request]
-    (let [segs (rest (split (:uri request) #"/"))
-          req (assoc request :segments segs)]
-      (handler req))))
+(def gu (gudu/gu routes))
 
-(defn router [routes]
-  (fn [req]
-    (let [u (:uri req)
-          d (:default routes)
-          r (routes u d)]
-      (r req))))
+(defn router [handlers]
+  (let [du (gudu/du routes)]
+    (fn [req]
+      (let [u (:uri req)
+            r (du u)
+            d (handlers :default)
+            h (handlers r d)]
+        (h req)))))

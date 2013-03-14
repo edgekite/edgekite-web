@@ -5,7 +5,8 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [ring "1.1.8"]
-                 [hiccup "1.0.2"]]
+                 [hiccup "1.0.2"]
+                 [gudu "0.1.0-SNAPSHOT"]]
   :plugins [[lein-ring "0.8.2"]]
   :ring {:handler edgekite.web/handler
          :port 2000})

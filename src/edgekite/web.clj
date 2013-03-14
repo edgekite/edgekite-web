@@ -7,16 +7,8 @@
         [ring.util.response]
         [ring.handler.dump]
         [hiccup.core]
-        [hiccup.page]))
-
-(def url-map
-  {:home   "/"
-   :hello  "/hello"
-   :log    "/log"
-   :debug  "/debug"
-   :style  "/style.css"})
-
-(def gu (ggu url-map))
+        [hiccup.page])
+  (:require [gudu]))
 
 (defn page [title body]
   (html
@@ -74,17 +66,16 @@
       (store ip (java.util.Date.)))
     (handler req)))
 
-(def routes
-  {(gu :home)   home
-   (gu :hello)  hello
-   (gu :log)    log
-   (gu :debug)  handle-dump
-   :default     four-oh-four})
+(def handlers
+  {[:home]  home
+   [:hello] hello
+   [:log]   log
+   [:debug] handle-dump
+   :default four-oh-four})
 
 (def handler
-  (-> (router routes)
+  (-> (router handlers)
       (wrap-resource "public")
       wrap-file-info
       wrap-params
-      wrap-segment-uri
       wrap-log))
