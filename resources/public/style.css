@@ -7,8 +7,17 @@
          url(http://themes.googleusercontent.com/static/fonts/unicaone/v1/z3VYemEbD7zsQFQLG6g3Sj8E0i7KZn-EPnyo3HZu7kw.woff) format('woff');
 }
 
+@font-face {
+  font-family: 'Anaheim';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Anaheim'),
+       local('Anaheim-Regular'),
+       url(http://themes.googleusercontent.com/static/fonts/anaheim/v1/9grF9iDBrnUvUAGLpfiBHQ.woff) format('woff');
+}
+
 body {
-    font-family: monospace;
+    font-family: 'Anaheim', monospace;
     margin: 0;
     padding: 0;
     color: #6f6950;
@@ -37,6 +46,6 @@ h2 {
 
 #content {
     background: #d5d0cc;
-    padding: 12px 20px;
+    padding: 12px 25px;
     min-height: 500px;
 }
