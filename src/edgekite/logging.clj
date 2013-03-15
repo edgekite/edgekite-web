@@ -3,7 +3,6 @@
 
 (defn remap [f m]
   "Remap the values of m with f"
-  (println m)
   (into {} (for [[k v] m] [k (f v)])))
 
 (def id->f {:ip first
