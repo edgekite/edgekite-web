@@ -47,7 +47,8 @@
     (ok-html body)))
 
 (defn four-oh-four [req]
-  (-> (not-found (page "Four, Oh! Four." "Errrm..."))
+  (-> (page "Four, Oh! Four." "Errrm...")
+      not-found
       (content-type "text/html")))
 
 (defn map->table [m]
