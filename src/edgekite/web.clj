@@ -10,7 +10,7 @@
         [hiccup.page])
   (:require [gudu]))
 
-(defn page [title body]
+(defn page [title & body]
   (html
    (html5
     [:html
@@ -56,7 +56,8 @@
      (map #(do [:tr [:td (first %)] [:td (str (second %))]]) (seq m))])
 
 (defn log [req]
-  (let [body (page "log" [:div (map->table (get-log))])]
+  (let [render-log-by (fn [id] [:div [:h3 (name id)] (map->table (get-log-by id))])
+        body (page "log" (map render-log-by [:ip :url :date]))]
     (ok-html body)))
 
 (def handlers

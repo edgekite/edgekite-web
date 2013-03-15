@@ -2,3 +2,6 @@
 
 * TODO Stamp git details (commit id, log, branch, tag etc) in to app
 * TODO Log route
+* TODO Export/persist of log
+* TODO Live (i.e. AJAX) log updates
+* TODO Seperate URL destructuring and routing
