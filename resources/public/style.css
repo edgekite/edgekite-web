@@ -16,7 +16,10 @@
        url(http://themes.googleusercontent.com/static/fonts/anaheim/v1/9grF9iDBrnUvUAGLpfiBHQ.woff) format('woff');
 }
 
-body {
+body,
+input,
+button,
+select {
     font-family: 'Anaheim', monospace;
     margin: 0;
     padding: 0;
