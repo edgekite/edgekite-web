@@ -5,3 +5,4 @@
 * TODO Export/persist of log
 * TODO Live (i.e. AJAX) log updates
 * TODO Seperate URL destructuring and routing
+* TODO favicon.ico
