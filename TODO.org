@@ -6,3 +6,4 @@
 * TODO Live (i.e. AJAX) log updates
 * TODO Seperate URL destructuring and routing
 * TODO favicon.ico
+* TODO Add "About" page
