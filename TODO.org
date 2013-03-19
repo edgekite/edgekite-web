@@ -9,3 +9,4 @@
 * DONE Add "About" page
 * TODO Add navigation
 * TODO Use immutant
+* TODO Use markdown to render static content
