@@ -3,6 +3,7 @@
         [edgekite.logging]
         [edgekite.static]
         [edgekite.view]
+        [gudu.middleware]
         [ring.middleware.resource]
         [ring.middleware.file-info]
         [ring.middleware.params]
@@ -63,7 +64,7 @@
 
 (def handler
   (-> (router handlers)
-      wrap-route
+      (wrap-route routes)
       (wrap-resource "public")
       wrap-file-info
       wrap-params
