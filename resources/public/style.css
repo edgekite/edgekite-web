@@ -52,3 +52,7 @@ h2 {
     padding: 12px 25px;
     min-height: 500px;
 }
+
+.bullet {
+    padding-left: 10px;
+}

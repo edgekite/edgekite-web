@@ -1,6 +1,7 @@
 (ns edgekite.web
   (:use [edgekite.routing]
         [edgekite.logging]
+        [edgekite.static]
         [ring.middleware.resource]
         [ring.middleware.file-info]
         [ring.middleware.params]
@@ -8,7 +9,8 @@
         [ring.handler.dump]
         [hiccup.core]
         [hiccup.page])
-  (:require [gudu]))
+  (:require [gudu]
+            [clojure.java.io :as io]))
 
 (defn page [title & body]
   (html
@@ -21,7 +23,7 @@
       [:div#wrapper
        [:div#content
         [:div#top-bar
-         [:h1  "edgekite"]]
+         [:h1 "edgekite"]]
         (if title [:h2 title])
         body
         (comment [:div (java.util.Date.)])]]
@@ -32,7 +34,16 @@
       (content-type "text/html")))
 
 (defn home [req]
-  (ok-html (page nil [:div (str "Welcome to edgekite.")])))
+  (ok-html (page nil [:div "Welcome to edgekite."])))
+
+(defn static [req]
+  (if-let [id (page-id req)]
+    (let [content (-> (str id ".txt")
+                      io/resource
+                      slurp
+                      markup)]
+      (ok-html (page id content)))
+    nil))
 
 (def hello-form
   [:form {:action (gu :hello)
@@ -62,6 +73,7 @@
 
 (def handlers
   {[:home]  home
+   [:about] static
    [:hello] hello
    [:log]   log
    [:debug] handle-dump
@@ -69,6 +81,7 @@
 
 (def handler
   (-> (router handlers)
+      wrap-route
       (wrap-resource "public")
       wrap-file-info
       wrap-params
