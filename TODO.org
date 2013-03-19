@@ -7,4 +7,5 @@
 * TODO Seperate URL destructuring and routing
 * TODO favicon.ico
 * TODO Add "About" page
+* TODO Add navigation
 * TODO Use immutant
