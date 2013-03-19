@@ -2,32 +2,14 @@
   (:use [edgekite.routing]
         [edgekite.logging]
         [edgekite.static]
+        [edgekite.view]
         [ring.middleware.resource]
         [ring.middleware.file-info]
         [ring.middleware.params]
         [ring.util.response]
-        [ring.handler.dump]
-        [hiccup.core]
-        [hiccup.page])
+        [ring.handler.dump])
   (:require [gudu]
             [clojure.java.io :as io]))
-
-(defn page [title & body]
-  (html
-   (html5
-    [:html
-     [:head
-      [:title "edgekite"]
-      (include-css (gu :style))]
-     [:body
-      [:div#wrapper
-       [:div#content
-        [:div#top-bar
-         [:h1 "edgekite"]]
-        (if title [:h2 title])
-        body
-        (comment [:div (java.util.Date.)])]]
-      (comment [:script "setTimeout(\"location = location\", 1000)"])]])))
 
 (defn ok-html [body]
   (-> (response body)
@@ -64,7 +46,7 @@
 
 (defn map->table [m]
   [:table
-     (map #(do [:tr [:td (first %)] [:td (str (second %))]]) (seq m))])
+   (map (fn [[k v]] do [:tr [:td k] [:td v]]) (seq m))])
 
 (defn log [req]
   (let [render-log-by (fn [id] [:div [:h3 (name id)] (map->table (get-log-by id))])
