@@ -65,7 +65,7 @@
 (def handler
   (-> (router handlers)
       (wrap-route routes)
+      wrap-params
       (wrap-resource "public")
       wrap-file-info
-      wrap-params
       wrap-log))
