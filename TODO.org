@@ -5,7 +5,7 @@
 * TODO Export/persist of log
 * TODO Live (i.e. AJAX) log updates
 * DONE Seperate URL destructuring and routing
-* TODO favicon.ico
+* DONE favicon.ico
 * DONE Add "About" page
 * TODO Add navigation
 * TODO Use immutant
