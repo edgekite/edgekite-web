@@ -2,7 +2,7 @@
   (:require [clojure.string :as str]))
 
 (defn page-id [req]
-  (name (first (req :route))))
+  (last (req :route)))
 
 (defn markup-line [line]
   (let [bullet? (= \* (first (str/trim line)))]

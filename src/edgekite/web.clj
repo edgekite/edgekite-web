@@ -21,12 +21,11 @@
 
 (defn static [req]
   (if-let [id (page-id req)]
-    (let [content (-> (str id ".txt")
-                      io/resource
-                      slurp
-                      markup)]
-      (ok-html (page id content)))
-    nil))
+    (if-let [page-file (io/resource (str id ".txt"))]
+      (let [content (-> page-file
+                        slurp
+                        markup)]
+        (ok-html (page id content))))))
 
 (def hello-form
   [:form {:action (gu :hello)
@@ -55,12 +54,12 @@
     (ok-html body)))
 
 (def handlers
-  {[:home]  home
-   [:about] static
-   [:hello] hello
-   [:log]   log
-   [:debug] handle-dump
-   :default four-oh-four})
+  {:home     home
+   :hello    hello
+   :log      log
+   :debug    handle-dump
+   :static   static
+   :default  four-oh-four})
 
 (def handler
   (-> (router handlers)

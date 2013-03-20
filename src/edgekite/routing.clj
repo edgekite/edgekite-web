@@ -3,11 +3,10 @@
 
 (def routes
   {:home   []
-   :about  ["about"]
    :hello  ["hello"]
    :log    ["log"]
    :debug  ["debug"]
-   :style  ["style.css"]})
+   :static [gudu/string-segment]})
 
 (def gu (gudu/gu routes))
 
@@ -17,7 +16,7 @@
   (fn [req]
     (let [route   (:route req)
           default (handlers :default)
-          handler (handlers route)]
+          handler (handlers (first route))]
       (or (and handler
                (handler req))
           (default req)))))
