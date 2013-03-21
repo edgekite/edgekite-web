@@ -1,5 +1,6 @@
 #+TITLE: edgekite.web todos
 
+* DONE Reference web fonts by css file, not direct link to woff file
 * TODO Stamp git details (commit id, log, branch, tag etc) in to app
 * TODO Log route
 * TODO Export/persist of log
