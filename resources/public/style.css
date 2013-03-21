@@ -1,20 +1,4 @@
-@font-face {
-    font-family: 'Unica One';
-    font-style: normal;
-    font-weight: 400;
-    src: local('Unica One'),
-         local('UnicaOne-Regular'),
-         url(http://themes.googleusercontent.com/static/fonts/unicaone/v1/z3VYemEbD7zsQFQLG6g3Sj8E0i7KZn-EPnyo3HZu7kw.woff) format('woff');
-}
-
-@font-face {
-  font-family: 'Anaheim';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Anaheim'),
-       local('Anaheim-Regular'),
-       url(http://themes.googleusercontent.com/static/fonts/anaheim/v1/9grF9iDBrnUvUAGLpfiBHQ.woff) format('woff');
-}
+@import url(http://fonts.googleapis.com/css?family=Unica+One|Anaheim);
 
 body,
 input,
