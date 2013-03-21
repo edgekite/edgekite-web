@@ -8,8 +8,7 @@
                  [hiccup "1.0.2"]
                  [gudu "0.1.0-SNAPSHOT"]]
   :plugins [[lein-immutant "0.17.1"]]
-  :ring {:handler edgekite.web/handler
-         :port 2000}
+  :ring {:handler edgekite.web/handler}
   :immutant {:context-path "/"
              ;;:nrepl-port 7575
              })
