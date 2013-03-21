@@ -1,5 +1,6 @@
 (ns edgekite.routing
-  (:require [gudu]))
+  (:require [gudu]
+            [immutant.util]))
 
 (def routes
   {:home   []
@@ -8,7 +9,7 @@
    :debug  ["debug"]
    :static [gudu/string-segment]})
 
-(def gu (gudu/gu routes))
+(def gu (gudu/gu routes :context (immutant.util/context-path)))
 
 (def du (gudu/du routes))
 
