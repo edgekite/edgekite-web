@@ -53,16 +53,16 @@
         body (page "log" (map render-log-by [:ip :url :date]))]
     (ok-html body)))
 
-(def handlers
-  {:home     home
-   :hello    hello
-   :log      log
-   :debug    handle-dump
-   :static   static
-   :default  four-oh-four})
+(defn get-handler [[route & _]]
+  ({:home     home
+    :hello    hello
+    :log      log
+    :debug    handle-dump
+    :static   static}
+   route))
 
 (def handler
-  (-> (router handlers)
+  (-> (router get-handler four-oh-four)
       (wrap-route routes)
       wrap-params
       (wrap-resource "public")

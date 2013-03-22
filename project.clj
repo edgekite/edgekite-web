@@ -7,7 +7,8 @@
                  [ring "1.2.0-beta1"]
                  [hiccup "1.0.2"]
                  [gudu "0.1.0-SNAPSHOT"]]
-  :plugins [[lein-immutant "0.17.1"]]
+  :plugins [[lein-ring "0.8.3"]
+            [lein-immutant "0.17.1"]]
   :ring {:handler edgekite.web/handler}
   :immutant {:context-path "/"
              ;;:nrepl-port 7575
