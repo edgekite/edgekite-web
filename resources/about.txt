@@ -1,5 +1,5 @@
 Edgekite is Matt Lee. A software developer based in Fairford, UK.
-Matt loves creating beautiful code, his languages of choice are clojure and Haskell, although he is pragmatic and when the need arises he's been known to write C#. He also has experience with:
+Matt loves creating beautiful code, his languages of choice are Clojure and Haskell, although if the need arises he's been known to write C#. He also has experience with:
 * AWS
 * JavaScript
 * HTML
